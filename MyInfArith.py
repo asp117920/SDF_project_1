@@ -21,7 +21,7 @@ def run_java_code(data_type , operation , num1 , num2):
     try:
         jar_file_path = "target/Final_Project-1.0-SNAPSHOT.jar"
         if not os.path.exists(jar_file_path):
-            print(f"Error: JAR file not found at {jar_path}")
+            print(f"Error: JAR file not found at {jar_file_path}")
             exit(1)
         
         result = subprocess.run(
@@ -37,8 +37,9 @@ def run_java_code(data_type , operation , num1 , num2):
         exit(1)
 
 def main():
-    if len(sys.argv) != 5:
-        print("<MyInfArith.py <int/float> <operation> <num1> <num2>")
+    print("hello")
+    if len(sys.argv) != 5 :
+        print("python3 MyInfArith.py <int/float> <operation> <num1> <num2>")
         exit(1)
 
     data_type = sys.argv[1]
@@ -58,3 +59,5 @@ def main():
 
     result = run_java_code(data_type , operation , num1 , num2)
     print(f"the result is: {result}")
+
+main()
