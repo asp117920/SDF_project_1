@@ -30,7 +30,7 @@ def run_java_code(data_type , operation , num1 , num2):
             capture_output=True,
             text=True
         )
-        print(result)
+        # print(result.stdout)
         return result
     except subprocess.CalledProcessError as e:
         print(f"Error running Java program: {e.stderr.strip()}")
@@ -58,6 +58,6 @@ def main():
         compile_java()
 
     result = run_java_code(data_type , operation , num1 , num2)
-    print(f"the result is: {result}")
+    print(f"the result is: {result.stdout}")
 
 main()

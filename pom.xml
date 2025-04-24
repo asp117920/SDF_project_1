@@ -27,7 +27,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>arbitraryarithmetic.MyInfArith</mainClass> <!-- No package? Just use class name -->
+              <mainClass>arbitraryarithmetic.MyInfArith</mainClass> 
             </manifest>
           </archive>
         </configuration>
