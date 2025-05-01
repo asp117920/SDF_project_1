@@ -35,6 +35,7 @@ public class AFloat {
     public AFloat(AFloat other_float){
         this.value = other_float.value;
         this.no_digits_after_decimal = other_float.no_digits_after_decimal;
+        this.if_negative = other_float.if_negative;
     }
 
     public AFloat parse(String value){
@@ -55,10 +56,15 @@ public class AFloat {
             final_output.insert(0, "0");
         }
     
+      
+
         int inserting_index = final_output.length() - this.no_digits_after_decimal;
         final_output.insert(inserting_index, ".");
-    
         String result = final_output.toString();
+        if (no_digits_after_decimal > 30){
+            result = result.substring(0,inserting_index+1+30);
+            return result;
+        }
         result = result.replaceFirst("0+$", ""); // Remove trailing zeroes
         result = result.replaceFirst("\\.$", ""); // Remove decimal point if no digits after it
     
@@ -86,6 +92,7 @@ public class AFloat {
         }
         String float_1 = num1.value.substring(num1.value.length()-num1.no_digits_after_decimal);
         String float_2 = num2.value.substring(num2.value.length()-num2.no_digits_after_decimal);
+        
         int decimal_sequence_length = float_1.length()>float_2.length()?float_2.length():float_1.length();
         for(int i =0;i<decimal_sequence_length;i++){
             int digit1 = float_1.charAt(i)-'0';
@@ -197,11 +204,23 @@ public class AFloat {
 
     public AFloat subtract_aux(AFloat other) {
         if (this.if_negative && !other.if_negative) {
-            return other.subtract(this.abs());
+            AFloat result = this.abs().addition(other);
+            result.if_negative = true;
+            return result;
         } else if (!this.if_negative && other.if_negative) {
-            return this.addition(other.abs());
+            AFloat result = this.addition(other.abs());
+            result.if_negative = false;
+            return result;
         } else if (this.if_negative && other.if_negative) {
-            return other.abs().subtract(this.abs());
+            if(this.compareAbsolute(this.abs(), other.abs())>0){
+                AFloat result = this.abs().subtract(other.abs());
+                result.if_negative = true;
+            }
+            else if (this.compareAbsolute(this.abs(), other.abs())<0){
+                AFloat result = other.abs().subtract(this.abs());
+                result.if_negative = false;
+                return result;
+            }
         }
         
         String num1 = this.value;
@@ -209,7 +228,7 @@ public class AFloat {
     
         if (compareAbsolute(this,other) < 0) {
             AFloat result = new AFloat(num2).subtract(new AFloat(num1));
-            result.value = "-" + result.value;
+            result.if_negative = true;
             return result;
         }
     

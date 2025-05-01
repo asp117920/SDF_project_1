@@ -19,7 +19,7 @@ def compile_java():
 def run_java_code(data_type , operation , num1 , num2):
     """Run the compiled Java program"""
     try:
-        jar_file_path = "target/Final_Project-1.0-SNAPSHOT.jar"
+        jar_file_path = "target/aarithmetic-1.0-SNAPSHOT.jar"
         if not os.path.exists(jar_file_path):
             print(f"Error: JAR file not found at {jar_file_path}")
             exit(1)
