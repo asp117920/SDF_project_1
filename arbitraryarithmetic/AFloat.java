@@ -12,15 +12,15 @@ public class AFloat {
     }
 
     public AFloat(String value){
-        this.value = value;
-        this.value = value.replaceFirst("0+$", ""); //remove zeroes after decimal
-        this.value = value.replaceFirst("\\.$", ""); //removes decimal if there is no number left after removing zeroes
-
 
         if (value.startsWith("-")) {
             this.if_negative = true;
             value = value.substring(1);
         }
+
+        this.value = value;
+        this.value = value.replaceFirst("0+$", ""); //remove zeroes after decimal
+        this.value = value.replaceFirst("\\.$", ""); //removes decimal if there is no number left after removing zeroes
 
         if (value.contains(".")) {
             this.no_digits_after_decimal = value.length() - value.indexOf(".") - 1;
@@ -46,6 +46,27 @@ public class AFloat {
         result.if_negative = false;
         return result;
     }
+
+    public String stringFormat() {
+        StringBuilder final_output = new StringBuilder(this.value);
+    
+        // padding zeroes in front if the number has less number of digits than reuqired
+        while (final_output.length() <= this.no_digits_after_decimal) {
+            final_output.insert(0, "0");
+        }
+    
+        int inserting_index = final_output.length() - this.no_digits_after_decimal;
+        final_output.insert(inserting_index, ".");
+    
+        String result = final_output.toString();
+        result = result.replaceFirst("0+$", ""); // Remove trailing zeroes
+        result = result.replaceFirst("\\.$", ""); // Remove decimal point if no digits after it
+    
+        if (this.if_negative && !result.equals("0")) {
+            result = "-" + result;
+        }
+        return result;
+    }    
 
     public int compareAbsolute(AFloat num1 , AFloat num2) {
         String integer_part_1 = num1.value.substring(0,num1.value.length()-num1.no_digits_after_decimal);
@@ -247,7 +268,7 @@ public class AFloat {
 
         if (length_1 == 1 && length_2 == 1) {
             int prod = (num_1.charAt(0) - '0') * (num_2.charAt(0) - '0');
-            if (isNegative) prod = (-1)*prod;
+            // if (isNegative) prod = (-1)*prod;
             return new AFloat(String.valueOf(prod));
         }
 
@@ -288,7 +309,10 @@ public class AFloat {
         AFloat final_output = half_1.addition(half_2);
         final_output.trim_leading_zeros();
 
-        if (isNegative) final_output.if_negative = true;
+        if (isNegative) {
+            final_output.if_negative = true;
+        }
+
         return final_output;
     }   
 
@@ -301,7 +325,8 @@ public class AFloat {
         copy2.no_digits_after_decimal=0;
         AFloat result = copy1.multiply_aux(copy2);
         result.no_digits_after_decimal = final_decimal_count;
-        // result.if_negative = copy1.if_negative ^ copy2.if_negative;
+        result.if_negative = this.if_negative ^ other.if_negative;
+        // System.out.println(result.if_negative);
         // System.out.println("hello");
         // System.out.println(result.value+" "+result.no_digits_after_decimal);
         return result;
