@@ -33,4 +33,4 @@ java -jar target/Final_Project-1.0-SNAPSHOT.jar int multiply 123456789 987654321
 java -jar target/Final_Project-1.0-SNAPSHOT.jar float divide 22 7
 
 python src/main/python/MyInfArith.py <int|float> <operation> <num1> <num2>
-
+```
