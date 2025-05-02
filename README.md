@@ -2,9 +2,6 @@
 
 # Arbitrary Precision Arithmetic Library
 
-![Java](https://img.shields.io/badge/Java-17-blue)
-![Maven](https://img.shields.io/badge/Maven-3.8.6-red)
-![License](https://img.shields.io/badge/License-MIT-green)
 
 A Java-based library for performing arithmetic operations with arbitrary precision, overcoming the limitations of standard data types. Designed for educational purposes, this project demonstrates high-precision calculations using string representations and efficient algorithms.
 
