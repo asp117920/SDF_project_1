@@ -1,0 +1,309 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{parskip}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{lipsum}
+
+% Page layout
+\geometry{a4paper, margin=1in}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.8em}
+
+% Colors
+\definecolor{codebg}{rgb}{0.95,0.95,0.95}
+\definecolor{keyword}{rgb}{0,0,1}
+\definecolor{comment}{rgb}{0,0.5,0}
+
+% Listings style
+\lstset{
+    backgroundcolor=\color{codebg},
+    basicstyle=\footnotesize\ttfamily,
+    keywordstyle=\color{keyword},
+    commentstyle=\color{comment},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    frame=single,
+    breaklines=true,
+    postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+}
+
+% Custom section formatting
+\titleformat{\section}{\Large\bfseries\filcenter}{}{0em}{\vspace{0.5em}}
+\titleformat{\subsection}{\large\bfseries}{}{0em}{\vspace{0.3em}}
+\titleformat{\subsubsection}{\bfseries}{}{0em}{\vspace{0.2em}}
+
+% Header/Footer
+\pagestyle{fancy}
+\fancyhf{}
+\rfoot{Page \thepage}
+\renewcommand{\headrulewidth}{0pt}
+
+\begin{document}
+
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+    {\Huge\bfseries Arbitrary Precision Arithmetic Library\par}
+    \vspace{1cm}
+    {\Large Final Project for CS1023 Course\par}
+    \vspace{2cm}
+    {\Large Submitted by\par}
+    {\Large\bfseries Asit Patel (CS24BTECH11046)\par}
+    \vspace{0.5cm}
+    \vspace{1cm}
+    {\Large Indian Institute of Technology Hyderabad\par}
+    \vfill
+    {\large \today\par}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\section{Abstract}
+This project implements a comprehensive arbitrary precision arithmetic library that overcomes the limitations of standard data types in programming languages. The library provides:
+
+\begin{itemize}
+    \item Unlimited precision integer arithmetic operations
+    \item High-precision floating-point calculations
+    \item Exact decimal representations without rounding errors
+    \item Four fundamental operations: addition, subtraction, multiplication, and division
+    \item Usage of command-line interface for command executions.
+\end{itemize}
+
+Designed for educational purposes, this implementation demonstrates how basic arithmetic operations can be extended beyond hardware limitations using clever algorithms and proper data representation.
+
+\section{Introduction}
+\subsection{The Need for Arbitrary Precision}
+In standard programming languages like Java, numerical data types have fixed sizes that limit their range and precision. For example:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lll}
+\toprule
+\textbf{Type} & \textbf{Size} & \textbf{Range} \\
+\midrule
+int & 32-bit & $-2^{31}$ to $2^{31}-1$ \\
+long & 64-bit & $-2^{63}$ to $2^{63}-1$ \\
+float & 32-bit & $\pm1.4\times10^{-45}$ to $\pm3.4\times10^{38}$ \\
+double & 64-bit & $\pm4.9\times10^{-324}$ to $\pm1.8\times10^{308}$ \\
+\bottomrule
+\end{tabular}
+\caption{Standard Java Data Type Limitations}
+\label{tab:types}
+\end{table}
+
+These limitations become problematic in applications requiring very high precision like Financial computations, Scientific simulations, Mathematical research and Cryptography.
+
+\subsection{Our Solution}
+Our library solves these problems by:
+\begin{itemize}
+    \item Representing numbers as strings (allowing unlimited length)
+    \item Implementing digit-wise arithmetic operations
+    \item Providing precise control over decimal places
+    \item Handling edge cases and special scenarios
+\end{itemize}
+
+\section{Project Structure}
+\subsection{File Organization}
+The project follows standard Maven directory structure:
+
+\begin{itemize}
+    \item \textbf{src/main/java/arbitraryarithmetic/}
+    \begin{itemize}
+        \item \texttt{AInteger.java} - Core integer operations
+        \item \texttt{AFloat.java} - Floating-point implementation
+        \item \texttt{MyInfArith.java} - Command-line interface
+    \end{itemize}
+    
+    \item \textbf{src/main/python/}
+    \begin{itemize}
+        \item \texttt{MyInfArith.py} - Python wrapper script
+    \end{itemize}
+    
+    \item \textbf{pom.xml} - Maven build configuration
+    \item \textbf{README.md} - Usage instructions
+\end{itemize}
+
+\subsection{Key Components}
+\begin{itemize}
+    \item \textbf{AInteger Class}:
+    \begin{itemize}
+        \item Handles arbitrary precision integers by using string representation
+        \item Stores numbers as strings with sign flag for positive negative
+        \item Implements all basic arithmetic operations
+        \item Implements Karatsuba method for multiplication and recursive long division.
+    \end{itemize}
+    
+    \item \textbf{AFloat Class}:
+    \begin{itemize}
+        \item Manages high-precision decimals
+        \item Tracks decimal positions
+        \item Automatically aligns decimals for operations
+    \end{itemize}
+    
+    \item \textbf{MyInfArith}:
+    \begin{itemize}
+        \item Provides user-friendly command-line interface
+        \item Validates input and formats output
+    \end{itemize}
+\end{itemize}
+
+\section{Design and Implementation}
+\subsection{Core Algorithms}
+\subsubsection{Karatsuba Multiplication}
+This efficient multiplication algorithm reduces the complexity from O(n²) to O(n^{1.585}) by recursively breaking the problem into smaller subproblems:
+
+\begin{enumerate}
+    \item Split numbers into high and low parts: $x = x_1 \times 10^m + x_0$
+    \item Compute three partial products:
+    \begin{itemize}
+        \item $z_0 = x_0 \times y_0$
+        \item $z_1 = (x_1 + x_0) \times (y_1 + y_0)$
+        \item $z_2 = x_1 \times y_1$
+    \end{itemize}
+    \item Combine results: $z_2 \times 10^{2m} + (z_1 - z_2 - z_0) \times 10^m + z_0$
+\end{enumerate}
+
+\subsection{Decimal Handling in AFloat}
+The \texttt{pre\_process} method ensures proper decimal alignment:
+
+\begin{lstlisting}[language=Java]
+public int pre_process(AFloat other) {
+    if(no_decimal_1 > no_decimal_2) {
+        // Pad other_number with trailing zeros
+        other.value += "0".repeat(no_decimal_1 - no_decimal_2);
+    } else {
+        // Pad this_number with trailing zeros
+        this.value += "0".repeat(no_decimal_2 - no_decimal_1);
+    }
+}
+\end{lstlisting}
+
+This ensures numbers like 12.34 and 5.678 become 12.340 and 5.678 before operations. It make the number of decimal digits same by padding zeroes to the end
+
+\section{Testing with sample Inputs}
+
+\subsection{Representative Test Cases}
+\begin{itemize}
+    \item \textbf{Large Integer Addition}:
+    \begin{itemize}
+        \item Input: $10^{100} + 1$
+        \item Output: $100\ldots001$ (101 digits)
+        \item Verifies carry propagation
+    \end{itemize}
+    
+    \item \textbf{Precise Subtraction}:
+    \begin{itemize}
+        \item Input: $1 - 0.99999999999999999999$
+        \item Output: $0.00000000000000000001$
+        \item Tests exact decimal handling
+    \end{itemize}
+    
+    \item \textbf{Multiplication}:
+    \begin{itemize}
+        \item Input: $123456789 \times 987654321$
+        \item Output: $121932631112635269$
+        \item Validates algorithm correctness
+    \end{itemize}
+    
+    \item \textbf{Division}:
+    \begin{itemize}
+        \item Input: $1 / 3$
+        \item Output: $0.\overline{3}$ (1000 decimal places)
+        \item Demonstrates precision control
+    \end{itemize}
+    
+    \item \textbf{Float Addition}:
+    \begin{itemize}
+        \item Input: $999999999999.999999999999 + 0.000000000001$
+        \item Output: $1000000000000.0$
+        \item Tests decimal alignment
+    \end{itemize}
+\end{itemize}
+
+\section{Build and Usage}
+\subsection{Building the Project}
+\begin{lstlisting}[language=bash]
+# Clone repository
+git clone https://github.com/your-repo/arbitrary-arithmetic.git
+cd arbitrary-arithmetic
+
+# Build with Maven
+mvn clean package
+
+# Output JAR will be at:
+# target/Final_Project-1.0-SNAPSHOT.jar
+\end{lstlisting}
+
+\subsection{Command-line Usage}
+Basic syntax:
+\begin{lstlisting}[language=bash]
+java -jar target/Final_Project-1.0-SNAPSHOT.jar <int/float> <operation> <num1> <num2>
+\end{lstlisting}
+
+Examples:
+\begin{itemize}
+    \item Integer multiplication:
+    \begin{lstlisting}[language=bash]
+java -jar target/Final_Project-1.0-SNAPSHOT.jar int multiply 123456789 987654321
+    \end{lstlisting}
+    
+    \item Floating-point division:
+    \begin{lstlisting}[language=bash]
+java -jar target/Final_Project-1.0-SNAPSHOT.jar float divide 22 7
+    \end{lstlisting}
+\end{itemize}
+
+\section{Limitations and Future Work}
+\subsection{Current Limitations}
+\begin{itemize}
+    \item \textbf{Performance}: Operations slow down significantly with numbers >10,000 digits
+    \item \textbf{Memory Usage}: Large numbers consume substantial memory
+    \item \textbf{Functionality}: Limited to basic arithmetic operations
+    \item \textbf{Precision}: Floating-point division precision capped at 1000 places
+\end{itemize}
+
+\subsection{Future Enhancements}
+\begin{itemize}
+    \item The code could have been made more cleaner and modular for easy understanding and expansion.
+    \item Advanced mathematical functions like square-root, logarithmic and exponential functions.
+    \item For some of the operations, more efficient methods could have been used. Using Lists for storing the numbers instead of String can result in faster computations.
+    \item Support for rational and irrational numbers can also be added in form of new class.
+\end{itemize}
+
+\section{Key Learnings}
+This project provided invaluable learning experiences in multiple areas:
+
+\subsection{Technical Skills}
+\begin{itemize}
+    \item Implementation of advanced algorithms like Karatsuba multiplication
+    \item String manipulation at scale. Object-oriented design principles. Exception handling and edge cases.
+    \item Build system in Java. Use of Maven for project compilation and Jar file generation.
+    \item Usage of Python for executing the Java code using Jar.
+    \item Using Git and Github for version control.
+    \Item Container Image implementation using Docker. Pushing it on Dockerhub and pulling and running it on other devices.
+\end{itemize}
+
+\subsection{Problem Solving}
+\begin{itemize}
+    \item Debugging complex numerical issues
+    \item Performance optimization techniques
+    \item Trade-off analysis between different approaches
+    \item Testing methodologies for numerical code
+\end{itemize}
+
+\section{Conclusion}
+This project successfully implements arbitrary precision arithmetic using string-based algorithms, overcoming standard data type limitations. 
+This library delivers working arbitrary precision arithmetic but has clear performance limits with large numbers. 
+While the core operations function correctly, real-world use would require significant optimization. The project provided valuable experience with numerical algorithms and their implementation from scratch.
+
+\end{document}
