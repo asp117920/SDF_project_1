@@ -36,6 +36,15 @@ public class AInteger {
         return new AInteger(number);
     }
 
+    public String stringFormat(){
+
+        String result = this.value;
+        if(this.if_negative){
+            result = "-"+result;
+        }
+        return result;
+    }
+
     public AInteger add(AInteger other) {
         // return new AInteger(String.valueOf(Double.parseDouble(number_1)+Double.parseDouble(number_2)));
         String number_1 = this.value;
@@ -67,7 +76,9 @@ public class AInteger {
         }
 
         if(other.if_negative && this.if_negative){// both of them are negative
-            return new AInteger("-"+sum_value.reverse().toString());
+            AInteger result = new AInteger(sum_value.reverse().toString());
+            result.if_negative = true;
+            return result;
         }
         return new AInteger(sum_value.reverse().toString());
     }
@@ -81,7 +92,9 @@ public class AInteger {
 
     public AInteger subtract(AInteger other) {
         if (this.if_negative && !other.if_negative) {
-            return other.subtract(this.abs());
+            AInteger other_ = new AInteger(other.value);
+            other_.if_negative = true;
+            return this.add(other_);
         } else if (!this.if_negative && other.if_negative) {
             return this.add(other.abs());
         } else if (this.if_negative && other.if_negative) {
@@ -94,7 +107,7 @@ public class AInteger {
         // Handle negative results (if num1 < num2)
         if (compareAbsolute(num1, num2) < 0) {
             AInteger result = new AInteger(num2).subtract(new AInteger(num1));
-            result.value = "-" + result.value;
+            result.if_negative = true;
             return result;
         }
     
@@ -279,6 +292,7 @@ public class AInteger {
         }
     
         if (i > Divident_value.length()) {
+            result.deleteCharAt(result.length()-1);
             return; // nothing more to divide
         }
     

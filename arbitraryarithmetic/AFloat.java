@@ -391,6 +391,7 @@ public class AFloat {
         }
     
         if (i > Divident_value.length()) {
+            // result.deleteCharAt(result.length()-1);
             return;
         }
     
@@ -419,9 +420,17 @@ public class AFloat {
         AFloat copy1 = new AFloat(this);
         AFloat copy2 = new AFloat(other);
 
+        int decimal_value = copy1.pre_process(copy2);
+
+        // System.out.println(copy1.value + " "+ copy2.value);
+
         AFloat copy1_ = copy1.pad_zeroes(1000);
+
         AFloat result = copy1_.division_aux(copy2);
-        result.no_digits_after_decimal = 1000;
+        result.no_digits_after_decimal = 1000; // default value of 1000 decimals for non-terminating values
+        // handling the case of terminating-decimals separtely
+
+        // System.out.println(result.value+" "+result.no_digits_after_decimal);
         return result;
     }
 }

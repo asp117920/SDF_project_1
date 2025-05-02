@@ -33,10 +33,24 @@ public class MyInfArith {
         AInteger b = new AInteger(op2);
 
         switch (operation) {
-            case "add": return a.add(b).value;
-            case "subtract": return a.subtract(b).value;
-            case "multiply": return a.multiply(b).value;
-            case "divide": return a.division(b).value;
+            case "add": return a.add(b).stringFormat();
+            case "subtract": return a.subtract(b).stringFormat();
+            case "multiply": return a.multiply(b).stringFormat();
+            case "divide": 
+                int flag = 0 ;
+                for(int i=0 ; i<b.value.length() ; i++){
+                    if(b.value.charAt(i) != '0')
+                    {
+                        flag = 1;
+                        break;
+                    }
+                }
+                if(flag == 0){
+                    return "Error: Division by Zero";
+                }
+                else{
+                    return a.division(b).stringFormat();
+                }
             default: throw new IllegalArgumentException("Invalid operation for integers");
         }
     }

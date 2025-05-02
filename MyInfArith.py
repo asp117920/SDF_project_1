@@ -37,7 +37,6 @@ def run_java_code(data_type , operation , num1 , num2):
         exit(1)
 
 def main():
-    print("hello")
     if len(sys.argv) != 5 :
         print("python3 MyInfArith.py <int/float> <operation> <num1> <num2>")
         exit(1)
