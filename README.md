@@ -23,8 +23,9 @@ A Java-based library for performing arithmetic operations with arbitrary precisi
    ```bash
    git clone https://github.com/your-repo/arbitrary-arithmetic.git
    cd arbitrary-arithmetic
+   ```
 
-    ```
+    ```bash
     mvn clean package
 
     java -jar target/Final_Project-1.0-SNAPSHOT.jar <int|float> <operation> <num1> <num2>
