@@ -11,4 +11,5 @@ COPY . .
 RUN mvn clean package
 
 # Defines the command you want to learn when when running you container
-CMD ["java", "-jar", "target/aarithmetic-1.0-SNAPSHOT.jar"]
+ENTRYPOINT [ "java", "-jar", "target/aarithmetic-1.0-SNAPSHOT.jar" ]
+CMD ["int", "add", "1", "1"]
